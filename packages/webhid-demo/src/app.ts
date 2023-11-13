@@ -1,4 +1,4 @@
-import { getOpenedSpaceMice, requestSpaceMice, setupSpaceMouse, SpaceMouse } from 'spaceMouse-webhid'
+import { getOpenedSpaceMice, requestSpaceMice, setupSpaceMouse, SpaceMouse } from 'spacemouse-webhid'
 
 function appendLog(str: string) {
 	const logElm = document.getElementById('log')

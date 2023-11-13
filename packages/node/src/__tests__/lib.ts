@@ -7,7 +7,6 @@ export function getSentData() {
 	return sentData
 }
 
-export function receiveData(hid: HID.HID, message: number[]) {}
 export function handleSpaceMouseMessages(hid: HID.HID, message: number[]) {
 	// Replies to a few of the messages that are sent to the SpaceMouse
 

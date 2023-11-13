@@ -67,7 +67,7 @@ export async function setupSpaceMouse(devicePathOrHIDDevice?: HID.Device | HID.H
 		device = new HID.HID(devicePath)
 		// deviceInfo is set later
 	} else {
-		throw new Error('setupSpaceMouse: invalid arguments')
+		throw new Error(`setupSpaceMouse: invalid arguments: ${JSON.stringify(devicePathOrHIDDevice)}`)
 	}
 
 	if (!deviceInfo) {

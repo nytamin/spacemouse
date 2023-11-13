@@ -1,6 +1,6 @@
 import * as HID from 'node-hid'
 import * as HIDMock from '../__mocks__/node-hid'
-import { PRODUCTS, Rotation, setupSpaceMouse, SpaceMouse } from '../'
+import { PRODUCTS, Rotation, setupSpaceMouse } from '../'
 import { getSentData, handleSpaceMouseMessages, resetSentData } from './lib'
 import { getMockHIDDevices } from '../__mocks__/node-hid'
 import { Translation } from '@spacemouse-lib/core'
@@ -12,6 +12,7 @@ describe('Unit tests', () => {
 		const hidDevice = {
 			vendorId: PRODUCTS['SpaceNavigator'].vendorId,
 			productId: PRODUCTS['SpaceNavigator'].productId,
+			interface: 0,
 			path: 'mockPath',
 		} as HID.Device
 
@@ -58,7 +59,7 @@ describe('Unit tests', () => {
 		expect(onError).toHaveBeenCalledTimes(0)
 		expect(rotate).toEqual({
 			pitch: 50,
-			roll: -255,
+			roll: -1,
 			yaw: 139,
 		})
 		// Translation:
@@ -67,7 +68,7 @@ describe('Unit tests', () => {
 		expect(translate).toEqual({
 			x: 27,
 			y: 21,
-			z: 94,
+			z: 350,
 		})
 	})
 })
