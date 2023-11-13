@@ -1,0 +1,48 @@
+{
+  "name": "@spacemouse-lib/core",
+  "version": "0.0.1",
+  "description": "NPM package to interact with the SpaceMouse devices",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "license": "MIT",
+  "homepage": "https://github.com/nytamin/spacemouse",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nytamin/spacemouse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nytamin/spacemouse/issues"
+  },
+  "author": {
+    "name": "Johan Nyman",
+    "email": "johan@nytamin.se",
+    "url": "https://github.com/nytamin"
+  },
+  "scripts": {
+    "build": "rimraf dist && yarn build:main",
+    "build:main": "tsc -p tsconfig.build.json",
+    "__test": "jest"
+  },
+  "files": [
+    "dist/**"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "prettier": "@sofie-automation/code-standard-preset/.prettierrc.json",
+  "keywords": [
+    "spaceMouse",
+    "SpaceMouse",
+    "hid",
+    "usb",
+    "hardware",
+    "interface",
+    "controller"
+  ],
+  "dependencies": {
+    "tslib": "^2.4.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

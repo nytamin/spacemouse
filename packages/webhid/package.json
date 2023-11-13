@@ -1,0 +1,48 @@
+{
+  "name": "spacemouse-webhid",
+  "version": "0.0.1",
+  "description": "An npm module for interfacing with the SpaceMouse devices in a browser",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "license": "MIT",
+  "homepage": "https://github.com/nytamin/spacemouse",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nytamin/spacemouse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nytamin/spacemouse/issues"
+  },
+  "author": {
+    "name": "Johan Nyman",
+    "email": "johan@nytamin.se",
+    "url": "https://github.com/nytamin"
+  },
+  "scripts": {
+    "build": "rimraf dist && yarn build:main",
+    "build:main": "tsc -p tsconfig.build.json"
+  },
+  "files": [
+    "dist/**"
+  ],
+  "prettier": "@sofie-automation/code-standard-preset/.prettierrc.json",
+  "keywords": [
+    "spaceMouse",
+    "SpaceMouse",
+    "hid",
+    "usb",
+    "hardware",
+    "interface",
+    "controller",
+    "webhid"
+  ],
+  "dependencies": {
+    "@types/w3c-web-hid": "^1.0.3",
+    "@spacemouse-lib/core": "0.0.1",
+    "buffer": "^6.0.3",
+    "p-queue": "^6.6.2"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
