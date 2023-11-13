@@ -75,27 +75,27 @@ jobs:
           if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
             echo "env NPM_TOKEN not set!"
           else
-            echo ::set-output name=is-ok::"1"
+            echo "publish=prerelease" >> $GITHUB_OUTPUT
           fi
       - name: Prepare Environment
-        if: ${{ steps.check-npm-token.outputs.is-ok }}
+        if: ${{ steps.do-publish.outputs.publish }}
         run: |
           yarn
         env:
           CI: true
       - name: Build
-        if: ${{ steps.check-npm-token.outputs.is-ok }}
+        if: ${{ steps.do-publish.outputs.publish }}
         run: |
           yarn build
         env:
           CI: true
       - name: Set .npmrc file
-        if: ${{ steps.check-npm-token.outputs.is-ok }}
+        if: ${{ steps.do-publish.outputs.publish }}
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
           npm whoami
       - name: Publish prerelease to NPM
-        if: ${{ steps.check-npm-token.outputs.is-ok }}
+        if: ${{ steps.do-publish.outputs.publish }}
         run: yarn lerna:publish from-package --dist-tag prerelease --no-verify-access --yes
         env:
           CI: true
