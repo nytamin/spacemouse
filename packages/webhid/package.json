@@ -37,8 +37,8 @@
     "webhid"
   ],
   "dependencies": {
-    "@types/w3c-web-hid": "^1.0.3",
     "@spacemouse-lib/core": "0.0.1",
+    "@types/w3c-web-hid": "^1.0.3",
     "buffer": "^6.0.3",
     "p-queue": "^6.6.2"
   },

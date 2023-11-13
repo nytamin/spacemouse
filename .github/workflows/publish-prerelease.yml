@@ -75,7 +75,7 @@ jobs:
           if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
             echo "env NPM_TOKEN not set!"
           else
-            echo "Publish Release"
+            echo "Publish Prerelease"
             echo "publish=prerelease" >> $GITHUB_OUTPUT
           fi
       - name: Prepare Environment
