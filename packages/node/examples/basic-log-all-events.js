@@ -1,17 +1,15 @@
 const { SpaceMouseWatcher } = require('spacemouse-node')
 
-
 /*
 	This example connects to any connected SpaceMouse devices and logs
-	whenever a button is pressed or analog thing is moved
+	whenever the mouse is moved or a button is pressed.
 */
 
-// Set up the watcher for spaceMouse:
+// Set up the watcher for SpaceMouse:
 const watcher = new SpaceMouseWatcher({
-	// usePolling: false
+	// usePolling: false // To be used if node-usb is not supported
 	// pollingInterval= 1000
 })
-
 watcher.on('error', (e) => {
 	console.log('Error in SpaceMouseWatcher', e)
 })
@@ -26,15 +24,6 @@ watcher.on('connected', (spaceMouse) => {
 	spaceMouse.on('error', (...errs) => {
 		console.log('SpaceMouse error:', ...errs)
 	})
-
-	// Listen to pressed buttons:
-	spaceMouse.on('down', (keyIndex) => {
-		console.log('Button pressed ', keyIndex)
-	})
-	// Listen to released buttons:
-	spaceMouse.on('up', (keyIndex) => {
-		console.log('Button released', keyIndex)
-	})
 	// Listen to Rotation changes:
 	spaceMouse.on('rotate', (rotate) => {
 		console.log(`Rotate ${JSON.stringify(rotate)}`)
@@ -43,6 +32,15 @@ watcher.on('connected', (spaceMouse) => {
 	spaceMouse.on('translate', (translate) => {
 		console.log(`Translate ${JSON.stringify(translate)}`)
 	})
+	// Listen to pressed buttons:
+	spaceMouse.on('down', (keyIndex) => {
+		console.log('Button pressed ', keyIndex)
+	})
+	// Listen to released buttons:
+	spaceMouse.on('up', (keyIndex) => {
+		console.log('Button released', keyIndex)
+	})
+
 })
 
 // To stop watching, call

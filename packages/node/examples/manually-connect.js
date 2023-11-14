@@ -1,53 +1,47 @@
-// const { setupSpaceMouse, listAllConnectedDevices } = require('spacemouse-node')
-const { setupSpaceMouse, listAllConnectedDevices } = require('../dist')// nocommit tmp
+const { setupSpaceMouse, listAllConnectedDevices } = require('spacemouse-node')
 
 /*
 	This example shows how to use setupSpaceMouse()
 	directly, instead of going via SpaceMouseWatcher()
 */
 
-// Connect to an spaceMouse-device:
+// Connect to an SpaceMouse-device:
 setupSpaceMouse()
 	.then((spaceMouse) => {
+		console.log(`Connected to ${spaceMouse.info.name}`)
 		spaceMouse.on('disconnected', () => {
-			console.log(`SpaceMouse device of type ${spaceMouse.info.name} was disconnected`)
-			// Clean up stuff
+			console.log(`Disconnected!`)
 			spaceMouse.removeAllListeners()
 		})
-		spaceMouse.on('error', (...errs) => {
-			console.log('SpaceMouse error:', ...errs)
+		spaceMouse.on('error', (...args) => {
+			console.log('SpaceMouse error:', ...args)
 		})
-
-		spaceMouse.on('down', (keyIndex, metadata) => {
-			console.log('Button pressed', keyIndex, metadata)
+		// Listen to Rotation changes:
+		spaceMouse.on('rotate', (rotate) => {
+			console.log(`Rotate ${JSON.stringify(rotate)}`)
 		})
-
 		// ...
 	})
 	.catch(console.log) // Handle error
 
-// List and connect to all spaceMouse-devices:
+// List and connect to all SpaceMouse-devices:
 listAllConnectedDevices().forEach((connectedDevice) => {
 	setupSpaceMouse(connectedDevice)
 		.then((spaceMouse) => {
 			console.log(`Connected to ${spaceMouse.info.name}`)
+			spaceMouse.on('disconnected', () => {
+				console.log(`Disconnected!`)
+				spaceMouse.removeAllListeners()
+			})
+			spaceMouse.on('error', (...args) => {
+				console.log('SpaceMouse error:', ...args)
+			})
 
-			// Listen to pressed buttons:
-			spaceMouse.on('down', (keyIndex) => {
-				console.log('Button pressed ', keyIndex)
-			})
-			// Listen to released buttons:
-			spaceMouse.on('up', (keyIndex) => {
-				console.log('Button released', keyIndex)
-			})
 			// Listen to Rotation changes:
-			// spaceMouse.on('rotate', (rotate) => {
-			// 	console.log(`Rotate ${JSON.stringify(rotate)}`)
-			// })
-			// Listen to Translation changes:
-			spaceMouse.on('translate', (translate) => {
-				console.log(`Translate ${JSON.stringify(translate)}`)
+			spaceMouse.on('rotate', (rotate) => {
+				console.log(`Rotate ${JSON.stringify(rotate)}`)
 			})
+			// ...
 		})
 		.catch(console.log) // Handle error
 })

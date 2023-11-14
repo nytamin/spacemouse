@@ -28,7 +28,6 @@ export class SpaceMouse extends EventEmitter {
 
 	private _initialized = false
 	private _disconnected = false
-	private closed = false
 
 	/** Vendor ids for the SpaceMouse devices */
 	static get vendorIds(): number[] {
@@ -134,7 +133,6 @@ export class SpaceMouse extends EventEmitter {
 	}
 	/** Closes the device. Subsequent commands will raise errors. */
 	public async close(): Promise<void> {
-		this.closed = true
 		await this._handleDeviceDisconnected()
 	}
 
@@ -168,21 +166,6 @@ export class SpaceMouse extends EventEmitter {
 			this._disconnected = true
 			await this._device.close()
 			this.emit('disconnected')
-		}
-	}
-	/** (Internal function) Called when there has been detected that a device has been reconnected */
-	public async _handleDeviceReconnected(device: HIDDevice, deviceInfo: DeviceInfo): Promise<void> {
-		if (this.closed) return
-
-		if (this._disconnected) {
-			this._disconnected = false
-
-			// Re-vitalize:
-			this._device = device
-			this.product = this._setupDevice(deviceInfo)
-			await this.init()
-
-			this.emit('reconnected')
 		}
 	}
 	public get hidDevice(): HIDDevice {
