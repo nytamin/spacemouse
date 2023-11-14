@@ -3688,7 +3688,6 @@ class SpaceMouse extends events_1.EventEmitter {
         };
         this._initialized = false;
         this._disconnected = false;
-        this.closed = false;
         this.product = this._setupDevice(_deviceInfo);
     }
     /** Vendor ids for the SpaceMouse devices */
@@ -3760,9 +3759,10 @@ class SpaceMouse extends events_1.EventEmitter {
         this._device.on('error', (err) => {
             if ((err + '').match(/could not read from/)) {
                 // The device has been disconnected
-                this._handleDeviceDisconnected().catch((error) => {
-                    this.emit('error', error);
-                });
+                this._triggerHandleDeviceDisconnected();
+            }
+            else if ((err + '').match(/WebHID disconnected/)) {
+                this._triggerHandleDeviceDisconnected();
             }
             else {
                 this.emit('error', err);
@@ -3781,7 +3781,6 @@ class SpaceMouse extends events_1.EventEmitter {
     }
     /** Closes the device. Subsequent commands will raise errors. */
     async close() {
-        this.closed = true;
         await this._handleDeviceDisconnected();
     }
     /** Various information about the device and its capabilities */
@@ -3800,25 +3799,17 @@ class SpaceMouse extends events_1.EventEmitter {
     getButtons() {
         return new Map(this._buttonStates); // Make a copy
     }
+    _triggerHandleDeviceDisconnected() {
+        this._handleDeviceDisconnected().catch((error) => {
+            this.emit('error', error);
+        });
+    }
     /** (Internal function) Called when there has been detected that the device has been disconnected */
     async _handleDeviceDisconnected() {
         if (!this._disconnected) {
             this._disconnected = true;
             await this._device.close();
             this.emit('disconnected');
-        }
-    }
-    /** (Internal function) Called when there has been detected that a device has been reconnected */
-    async _handleDeviceReconnected(device, deviceInfo) {
-        if (this.closed)
-            return;
-        if (this._disconnected) {
-            this._disconnected = false;
-            // Re-vitalize:
-            this._device = device;
-            this.product = this._setupDevice(deviceInfo);
-            await this.init();
-            this.emit('reconnected');
         }
     }
     get hidDevice() {
@@ -4162,11 +4153,17 @@ class WebHIDDevice extends events_1.EventEmitter {
     constructor(device) {
         super();
         this.reportQueue = new p_queue_1.default({ concurrency: 1 });
-        this._handleInputreport = this._handleInputreport.bind(this);
+        this._handleInputReport = this._handleInputReport.bind(this);
         this._handleError = this._handleError.bind(this);
+        this._handleDisconnect = this._handleDisconnect.bind(this);
         this.device = device;
-        this.device.addEventListener('inputreport', this._handleInputreport);
+        this.device.addEventListener('inputreport', this._handleInputReport);
         this.device.addEventListener('error', this._handleError);
+        navigator.hid.addEventListener('disconnect', this._handleDisconnect);
+    }
+    async close() {
+        await this.device.close();
+        this._cleanup();
     }
     write(data) {
         this.reportQueue
@@ -4177,16 +4174,23 @@ class WebHIDDevice extends events_1.EventEmitter {
             this.emit('error', err);
         });
     }
-    async close() {
-        await this.device.close();
-        this.device.removeEventListener('inputreport', this._handleInputreport.bind(this));
+    _cleanup() {
+        this.device.removeEventListener('inputreport', this._handleInputReport);
+        this.device.removeEventListener('error', this._handleError);
+        navigator.hid.removeEventListener('disconnect', this._handleDisconnect);
     }
-    _handleInputreport(event) {
+    _handleInputReport(event) {
         const buf = buffer_1.Buffer.concat([buffer_1.Buffer.from([event.reportId]), buffer_1.Buffer.from(event.data.buffer)]);
         this.emit('data', buf);
     }
     _handleError(error) {
         this.emit('error', error);
+    }
+    _handleDisconnect(event) {
+        if (event.device === this.device) {
+            this.emit('error', 'WebHID disconnected');
+        }
+        this._cleanup();
     }
 }
 exports.WebHIDDevice = WebHIDDevice;
@@ -4241,6 +4245,12 @@ async function openDevice(device) {
     const spaceMouse = await (0, spacemouse_webhid_1.setupSpaceMouse)(device);
     currentSpaceMouse = spaceMouse;
     appendLog(`Connected to "${spaceMouse.info.name}"`);
+    spaceMouse.on('error', (error) => {
+        appendLog(`Error: ${error}`);
+    });
+    spaceMouse.on('disconnected', () => {
+        appendLog(`disconnected`);
+    });
     spaceMouse.on('down', (keyIndex) => {
         appendLog(`Button ${keyIndex} down`);
     });
