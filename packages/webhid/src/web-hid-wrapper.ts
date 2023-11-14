@@ -16,13 +16,19 @@ export class WebHIDDevice extends EventEmitter implements CoreHIDDevice {
 	constructor(device: HIDDevice) {
 		super()
 
-		this._handleInputreport = this._handleInputreport.bind(this)
+		this._handleInputReport = this._handleInputReport.bind(this)
 		this._handleError = this._handleError.bind(this)
+		this._handleDisconnect = this._handleDisconnect.bind(this)
 
 		this.device = device
 
-		this.device.addEventListener('inputreport', this._handleInputreport)
+		this.device.addEventListener('inputreport', this._handleInputReport)
 		this.device.addEventListener('error', this._handleError)
+		navigator.hid.addEventListener('disconnect', this._handleDisconnect)
+	}
+	public async close(): Promise<void> {
+		await this.device.close()
+		this._cleanup()
 	}
 	public write(data: number[]): void {
 		this.reportQueue
@@ -33,17 +39,23 @@ export class WebHIDDevice extends EventEmitter implements CoreHIDDevice {
 				this.emit('error', err)
 			})
 	}
-
-	public async close(): Promise<void> {
-		await this.device.close()
-		this.device.removeEventListener('inputreport', this._handleInputreport.bind(this))
+	private _cleanup(): void {
+		this.device.removeEventListener('inputreport', this._handleInputReport)
+		this.device.removeEventListener('error', this._handleError)
+		navigator.hid.removeEventListener('disconnect', this._handleDisconnect)
 	}
-	private _handleInputreport(event: HIDInputReportEvent) {
-		const buf = WebBuffer.concat([WebBuffer.from([event.reportId]), WebBuffer.from(event.data.buffer)])
 
+	private _handleInputReport(event: HIDInputReportEvent) {
+		const buf = WebBuffer.concat([WebBuffer.from([event.reportId]), WebBuffer.from(event.data.buffer)])
 		this.emit('data', buf)
 	}
 	private _handleError(error: any) {
 		this.emit('error', error)
+	}
+	private _handleDisconnect(event: HIDConnectionEvent) {
+		if (event.device === this.device) {
+			this.emit('error', 'WebHID disconnected')
+		}
+		this._cleanup()
 	}
 }

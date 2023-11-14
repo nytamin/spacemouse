@@ -42,7 +42,7 @@ export class SpaceMouse extends EventEmitter {
 	}
 	private _setupDevice(deviceInfo: DeviceInfo) {
 		const findProduct = (): { product: Product; productId: number; interface: number } => {
-			for (const product of Object.values(PRODUCTS)) {
+			for (const product of Object.values<Product>(PRODUCTS)) {
 				if (product.vendorId === deviceInfo.vendorId && product.productId === deviceInfo.productId) {
 					return {
 						product,
@@ -111,9 +111,9 @@ export class SpaceMouse extends EventEmitter {
 		this._device.on('error', (err) => {
 			if ((err + '').match(/could not read from/)) {
 				// The device has been disconnected
-				this._handleDeviceDisconnected().catch((error) => {
-					this.emit('error', error)
-				})
+				this._triggerHandleDeviceDisconnected()
+			} else if ((err + '').match(/WebHID disconnected/)) {
+				this._triggerHandleDeviceDisconnected()
 			} else {
 				this.emit('error', err)
 			}
@@ -157,6 +157,11 @@ export class SpaceMouse extends EventEmitter {
 		return new Map(this._buttonStates) // Make a copy
 	}
 
+	private _triggerHandleDeviceDisconnected(): void {
+		this._handleDeviceDisconnected().catch((error) => {
+			this.emit('error', error)
+		})
+	}
 	/** (Internal function) Called when there has been detected that the device has been disconnected */
 	public async _handleDeviceDisconnected(): Promise<void> {
 		if (!this._disconnected) {

@@ -182,7 +182,7 @@ export class SpaceMouseWatcher extends EventEmitter {
 		let removed = 0
 		let added = 0
 		// Removed devices:
-		for (const [devicePath, o] of Object.entries(this.seenDevicePaths)) {
+		for (const [devicePath, o] of Object.entries<{ spaceMouse?: SpaceMouse }>(this.seenDevicePaths)) {
 			if (!pathMap[devicePath]) {
 				// A device has been removed
 				this.debugLog('removed')

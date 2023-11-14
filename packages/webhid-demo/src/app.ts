@@ -16,6 +16,12 @@ async function openDevice(device: HIDDevice): Promise<void> {
 
 	appendLog(`Connected to "${spaceMouse.info.name}"`)
 
+	spaceMouse.on('error', (error) => {
+		appendLog(`Error: ${error}`)
+	})
+	spaceMouse.on('disconnected', () => {
+		appendLog(`disconnected`)
+	})
 	spaceMouse.on('down', (keyIndex: number) => {
 		appendLog(`Button ${keyIndex} down`)
 	})

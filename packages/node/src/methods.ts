@@ -1,4 +1,4 @@
-import { SpaceMouse, PRODUCTS, VENDOR_IDS } from '@spacemouse-lib/core'
+import { SpaceMouse, PRODUCTS, VENDOR_IDS, Product } from '@spacemouse-lib/core'
 import * as HID from 'node-hid'
 import type { usb } from 'usb'
 import { NodeHIDDevice } from './node-hid-wrapper'
@@ -122,7 +122,7 @@ export function isASpaceMouseDevice(device: HID.Device | usb.Device): boolean {
 
 	if (!VENDOR_IDS.includes(vendorId)) return false
 
-	for (const product of Object.values(PRODUCTS)) {
+	for (const product of Object.values<Product>(PRODUCTS)) {
 		if (product.productId === productId && product.vendorId === vendorId) {
 			return true // break and return
 		}
