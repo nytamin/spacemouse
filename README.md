@@ -12,6 +12,27 @@ License: MIT
 
 If you are using a [browser that supports WebHID](https://caniuse.com/webhid), you can try out the library right away, in the browser: [Demo](https://nytamin.github.io/spacemouse/).
 
+## Supported devices
+
+Some of the devices supported by this library are:
+
+- SpaceNavigator
+- SpaceMouse Wireless
+- SpaceMouse Compact
+- SpaceMouse Module
+- SpaceMouse Pro
+- SpaceMouse Pro Wireless
+- SpacePilot PRO
+- SpaceMouse Enterprise
+- CadMouse
+- CadMouse Wireless
+- CadMouse Pro Wireless
+- CadMouse Compact
+- CadMouse Pro
+- CadMouse Compact Wireless
+
+See the full list in [products.ts](packages/core/src/products.ts).
+
 ## Installation
 
 ### To use in Node.js
@@ -58,7 +79,7 @@ This is the recommended way to use this library, to automatically be connected o
 _Note: The watcher uses the [node-usb](https://github.com/node-usb/node-usb) library, which might be unsupported on some platforms. If it is not supported, it can use polling as fallback._
 
 ```javascript
-const { SpaceMouseWatcher } = require('spacemouse-node')
+const { SpaceMouseWatcher } = require('spacemouse-node') // or spacemouse-webhid in browser
 
 /*
 	This example connects to any connected SpaceMouse devices and logs
@@ -109,7 +130,7 @@ watcher.on('connected', (spaceMouse) => {
 ### Connect to a devices manually
 
 ```javascript
-const { setupSpaceMouse } = require('spacemouse-node')
+const { setupSpaceMouse } = require('spacemouse-node') // or spacemouse-webhid in browser
 
 /*
 	This example shows how to use setupSpaceMouse()
@@ -214,133 +235,9 @@ spaceMouse.on('rotate', (rotation) => {
 | `"translate"`    | Triggered when the mouse is moved.<br>Emitted with `(translation: {x: number, y: number, z: number})`         |
 | `"down"`, `"up"` | Triggered when a button is pressed / released.<br>Emitted with `(buttonIndex: number)`                        |
 
-### SpaceMouse Methods
-
-**Setting the backlight of a button**
-
-```javascript
-spaceMouse.setBacklight(keyIndex, color)
-
-// Examples:
-// Set blue light
-spaceMouse.setBacklight(keyIndex, '0000ff')
-// Set any available default light
-spaceMouse.setBacklight(keyIndex, true)
-// Turn off light
-spaceMouse.setBacklight(keyIndex, false)
-// Set flashing light
-spaceMouse.setBacklight(keyIndex, 'red', true)
-
-// Set color (for RGB-supported devices)
-spaceMouse.setBacklight(keyIndex, 'ff3300')
-```
-
-**Set the indicator LEDs (the red/green status LED's)**
-
-```javascript
-spaceMouse.setIndicatorLED(ledIndex, on, flashing)
-
-// Examples:
-// Light up the green LED
-spaceMouse.setIndicatorLED(1, true)
-// Flash the red LED
-spaceMouse.setIndicatorLED(2, true, true)
-```
-
-**Set backlight intensity**
-
-```javascript
-spaceMouse.setBacklightIntensity(intensity)
-
-// Example:
-// Set max intensity
-spaceMouse.setBacklightIntensity(255)
-```
-
-**Set all backlights on or off**
-
-```javascript
-spaceMouse.setAllBacklights(color)
-
-// Example:
-// Light up all buttons
-spaceMouse.setAllBacklights(true)
-// Light up all buttons in a nice color
-spaceMouse.setAllBacklights('ff33ff')
-// Turn of all buttons
-spaceMouse.setAllBacklights(false)
-```
-
-**Set flashing frequency**
-
-```javascript
-// The frequency can be set to 1-255, where 1 is fastest and 255 is the slowest.
-// 255 is approximately 4 seconds between flashes.
-spaceMouse.setFrequency(frequency)
-
-// Example:
-// Set the frequency to a pretty fast flash
-spaceMouse.setFrequency(8)
-```
-
-** Set unit ID **
-
-```javascript
-// Sets the UID (unit Id) value in the SpaceMouse hardware
-// Note: This writes to the EEPROM, don't call this function too often, or you'll kill the EEPROM! (An EEPROM only support a few thousands of write operations.)
-spaceMouse.setUnitId(unitId)
-```
-
-** Save backlights **
-
-```javascript
-// Save the backlights (so they are restored to this after a power cycle).
-// Note: This writes to the EEPROM, don't call this function too often, or you'll kill the EEPROM! (An EEPROM only support a few thousands of write operations.)
-spaceMouse.saveBackLights()
-```
-
 #### Other functionality
 
-See [the SpaceMouse-class](packages/core/src/spaceMouse.ts) for more functionality.
-
-### Supported devices
-
-Thanks to official support from [P.I Enginneering, the SpaceMouse manufacturer](https://spaceMouse.com/), there is support for all official (and some experimental) devices.
-
-See the full list in [products.ts](packages/core/src/products.ts).
-
-## Migrations
-
-### 2.0.0
-
-Version `2.0.0` is a breaking changes, which requires several changes in how to use the library.
-
-The most notable changes are:
-
-| Before, `<2.0.0`                                          | Changes in `>=2.0.0`                                                                                                                                                          |
-| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `let mySpaceMouse = new SpaceMouse()`                     | `let mySpaceMouse = await SpaceMouse.setupSpaceMouse()`                                                                                                                       |
-| `mySpaceMouse.on('down', (keyIndex) => {} )`              | The numbering of `keyIndexes` has changed:<br/>_ The PS-button is on index 0.<br/>_ Other buttons start on index 1.<br/>\* Numbering of buttons have changed for some models. |
-| `mySpaceMouse.on('downKey', (keyIndex) => {} )`           | Use `.on('down')` instead                                                                                                                                                     |
-| `mySpaceMouse.on('upKey', (keyIndex) => {} )`             | Use `.on('up')` instead                                                                                                                                                       |
-| `mySpaceMouse.on('downAlt', (keyIndex) => {} )`           | Use `.on('down')` instead (PS-button is on index 0)                                                                                                                           |
-| `mySpaceMouse.on('upAlt', (keyIndex) => {} )`             | Use `.on('up')` instead (PS-button is on index 0)                                                                                                                             |
-| `mySpaceMouse.on('jog', (position) => {} )`               | `mySpaceMouse.on('jog', (index, position) => {} )`                                                                                                                            |
-| `mySpaceMouse.on('shuttle', (position) => {} )`           | `mySpaceMouse.on('shuttle', (index, position) => {} )`                                                                                                                        |
-| `mySpaceMouse.on('tbar', (position, rawPosition) => {} )` | `mySpaceMouse.on('tbar', (index, position) => {} )`                                                                                                                           |
-| `mySpaceMouse.on('joystick', (position) => {} )`          | `mySpaceMouse.on('joystick', (index, position) => {} )`                                                                                                                       |
-| `mySpaceMouse.setBacklight(...)`                          | Arguments have changed, see docs                                                                                                                                              |
-| `mySpaceMouse.setAllBacklights(...)`                      | Arguments have changed, see docs                                                                                                                                              |
-| `mySpaceMouse.setLED(index, ...)`                         | `mySpaceMouse.setIndicatorLED(index, ...)` (index 1 = the red, 2 = the green one)                                                                                             |
-
-### 2.1.1
-
-Version `2.1.1` has a minor change for when stopping the SpaceMouseWatcher instance:
-
-```javascript
-const watcher = new SpaceMouseWatcher()
-await watcher.stop() // Now returns a promise
-```
+See [the SpaceMouse-class](packages/core/src/SpaceMouse.ts) for more functionality.
 
 # For developers
 
