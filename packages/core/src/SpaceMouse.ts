@@ -60,27 +60,15 @@ export class SpaceMouse extends EventEmitter {
 		this._device.on('data', (data: Buffer) => {
 			const messageType = data.readUInt8(0)
 			if (messageType === 1) {
-				const x = data.readInt16LE(1) // positive = right
-				const y = data.readInt16LE(3) // positive = "backwards"
-				const z = data.readInt16LE(5) // positive = down
+				this._handleTranslationData(data)
 
-				if (x !== this._translateState.x || y !== this._translateState.y || z !== this._translateState.z) {
-					this._translateState = { x, y, z }
-					this.emit('translate', { x, y, z })
+				if (data.length >= 13) {
+					// Some devices send rotation-data in the same message
+					// see https://github.com/nytamin/spacemouse/issues/1
+					this._handleRotationData(data, 7)
 				}
 			} else if (messageType === 2) {
-				const pitch = data.readInt16LE(1) // positive = right
-				const roll = data.readInt16LE(3) // positive = "backwards"
-				const yaw = data.readInt16LE(5) // positive = down
-
-				if (
-					pitch !== this._rotateState.pitch ||
-					roll !== this._rotateState.roll ||
-					yaw !== this._rotateState.yaw
-				) {
-					this._rotateState = { pitch, roll, yaw }
-					this.emit('rotate', { pitch, roll, yaw })
-				}
+				this._handleRotationData(data, 1)
 			} else if (messageType === 3) {
 				// Note: Assuming that each bit represents a pressed key (I don't know if this is true for all devices)
 				for (let byteIndex = 1; byteIndex < data.length; byteIndex++) {
@@ -122,6 +110,30 @@ export class SpaceMouse extends EventEmitter {
 			...found.product,
 			productId: found.productId,
 			interface: found.interface,
+		}
+	}
+	private _handleTranslationData(data: Buffer): void {
+		// Handle incoming data
+
+		const x = data.readInt16LE(1) // positive = right
+		const y = data.readInt16LE(3) // positive = "backwards"
+		const z = data.readInt16LE(5) // positive = down
+
+		if (x !== this._translateState.x || y !== this._translateState.y || z !== this._translateState.z) {
+			this._translateState = { x, y, z }
+			this.emit('translate', { x, y, z })
+		}
+	}
+	private _handleRotationData(data: Buffer, firstByteIndex: number): void {
+		// Handle incoming data
+
+		const pitch = data.readInt16LE(firstByteIndex) // positive = right
+		const roll = data.readInt16LE(firstByteIndex + 2) // positive = "backwards"
+		const yaw = data.readInt16LE(firstByteIndex + 4) // positive = down
+
+		if (pitch !== this._rotateState.pitch || roll !== this._rotateState.roll || yaw !== this._rotateState.yaw) {
+			this._rotateState = { pitch, roll, yaw }
+			this.emit('rotate', { pitch, roll, yaw })
 		}
 	}
 
