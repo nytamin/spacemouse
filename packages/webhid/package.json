@@ -39,8 +39,7 @@
   "dependencies": {
     "@spacemouse-lib/core": "0.0.2",
     "@types/w3c-web-hid": "^1.0.3",
-    "buffer": "^6.0.3",
-    "p-queue": "^6.6.2"
+    "buffer": "^6.0.3"
   },
   "engines": {
     "node": ">=14"

@@ -3,18 +3,18 @@ import * as HID from 'node-hid'
 import type { usb } from 'usb'
 import { NodeHIDDevice } from './node-hid-wrapper'
 
-import { isHID_Device, isHID_HID } from './lib'
+import { isHID_Device, isHID_AsyncHID } from './lib'
 
 import { HID_Device } from './api'
 
 /** Sets up a connection to a HID device (the SpaceMouse device) */
 export function setupSpaceMouse(): Promise<SpaceMouse>
 export function setupSpaceMouse(HIDDevice: HID.Device): Promise<SpaceMouse>
-export function setupSpaceMouse(HIDDevice: HID.HID): Promise<SpaceMouse>
+export function setupSpaceMouse(HIDDevice: HID.HIDAsync): Promise<SpaceMouse>
 export function setupSpaceMouse(devicePath: string): Promise<SpaceMouse>
-export async function setupSpaceMouse(devicePathOrHIDDevice?: HID.Device | HID.HID | string): Promise<SpaceMouse> {
+export async function setupSpaceMouse(devicePathOrHIDDevice?: HID.Device | HID.HIDAsync | string): Promise<SpaceMouse> {
 	let devicePath: string
-	let device: HID.HID
+	let device: HID.HIDAsync
 	let deviceInfo:
 		| {
 				product: string | undefined
@@ -32,7 +32,7 @@ export async function setupSpaceMouse(devicePathOrHIDDevice?: HID.Device | HID.H
 		}
 		// Just select the first one:
 		devicePath = connectedSpaceMouse[0].path
-		device = new HID.HID(devicePath)
+		device = await HID.HIDAsync.open(devicePath)
 
 		deviceInfo = {
 			product: connectedSpaceMouse[0].product,
@@ -46,7 +46,7 @@ export async function setupSpaceMouse(devicePathOrHIDDevice?: HID.Device | HID.H
 		if (!devicePathOrHIDDevice.path) throw new Error('HID.Device path not set!')
 
 		devicePath = devicePathOrHIDDevice.path
-		device = new HID.HID(devicePath)
+		device = await HID.HIDAsync.open(devicePath)
 
 		deviceInfo = {
 			product: devicePathOrHIDDevice.product,
@@ -54,8 +54,8 @@ export async function setupSpaceMouse(devicePathOrHIDDevice?: HID.Device | HID.H
 			productId: devicePathOrHIDDevice.productId,
 			interface: devicePathOrHIDDevice.interface,
 		}
-	} else if (isHID_HID(devicePathOrHIDDevice)) {
-		// is HID.HID
+	} else if (isHID_AsyncHID(devicePathOrHIDDevice)) {
+		// is HID.HIDAsync
 
 		device = devicePathOrHIDDevice
 		devicePath = devicePathOrHIDDevice.devicePath
@@ -64,7 +64,7 @@ export async function setupSpaceMouse(devicePathOrHIDDevice?: HID.Device | HID.H
 		// is string (path)
 
 		devicePath = devicePathOrHIDDevice
-		device = new HID.HID(devicePath)
+		device = await HID.HIDAsync.open(devicePath)
 		// deviceInfo is set later
 	} else {
 		throw new Error(`setupSpaceMouse: invalid arguments: ${JSON.stringify(devicePathOrHIDDevice)}`)

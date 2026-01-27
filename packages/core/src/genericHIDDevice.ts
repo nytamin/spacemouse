@@ -6,7 +6,7 @@ export interface HIDDevice {
 	on(event: 'error', handler: (data: any) => void): this
 	on(event: 'data', handler: (data: Buffer) => void): this
 
-	write(data: number[]): void
+	// write(data: number[]): void // No writes implemented (yet)
 
 	close(): Promise<void>
 }

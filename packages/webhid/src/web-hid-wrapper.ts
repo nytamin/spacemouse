@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { HIDDevice as CoreHIDDevice } from '@spacemouse-lib/core'
 import { EventEmitter } from 'events'
-import Queue from 'p-queue'
 import { Buffer as WebBuffer } from 'buffer'
 
 /**
@@ -10,8 +9,6 @@ import { Buffer as WebBuffer } from 'buffer'
  */
 export class WebHIDDevice extends EventEmitter implements CoreHIDDevice {
 	private readonly device: HIDDevice
-
-	private readonly reportQueue = new Queue({ concurrency: 1 })
 
 	constructor(device: HIDDevice) {
 		super()
@@ -30,15 +27,16 @@ export class WebHIDDevice extends EventEmitter implements CoreHIDDevice {
 		await this.device.close()
 		this._cleanup()
 	}
-	public write(data: number[]): void {
-		this.reportQueue
-			.add(async () => {
-				await this.device.sendReport(data[0], new Uint8Array(data.slice(1)))
-			})
-			.catch((err) => {
-				this.emit('error', err)
-			})
-	}
+	// No writes implemented (yet)
+	// public write(data: number[]): void {
+	// 	this.reportQueue
+	// 		.add(async () => {
+	// 			await this.device.sendReport(data[0], new Uint8Array(data.slice(1)))
+	// 		})
+	// 		.catch((err) => {
+	// 			this.emit('error', err)
+	// 		})
+	// }
 	private _cleanup(): void {
 		this.device.removeEventListener('inputreport', this._handleInputReport)
 		this.device.removeEventListener('error', this._handleError)

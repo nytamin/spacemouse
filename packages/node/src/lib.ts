@@ -1,9 +1,9 @@
-import type * as HID from 'node-hid'
+import * as HID from 'node-hid'
 /*
  * This file contains internal convenience functions
  */
 
-export function isHID_Device(device: HID.Device | HID.HID | string): device is HID.Device {
+export function isHID_Device(device: HID.Device | HID.HIDAsync | string): device is HID.Device {
 	return (
 		typeof device === 'object' &&
 		(device as HID.Device).vendorId !== undefined &&
@@ -11,12 +11,11 @@ export function isHID_Device(device: HID.Device | HID.HID | string): device is H
 		(device as HID.Device).interface !== undefined
 	)
 }
-type HID_HID = HID.HID & { devicePath: string }
-export function isHID_HID(device: HID.Device | HID.HID | string): device is HID_HID {
+type HID_AsyncHID = HID.HIDAsync & { devicePath: string }
+export function isHID_AsyncHID(device: HID.Device | HID.HIDAsync | string): device is HID_AsyncHID {
 	return (
 		typeof device === 'object' &&
-		(device as HID_HID).write !== undefined &&
-		(device as HID_HID).getFeatureReport !== undefined &&
-		(device as HID_HID).devicePath !== undefined // yes, HID.HID exposes this, we're using that
+		device instanceof HID.HIDAsync &&
+		(device as HID_AsyncHID).devicePath !== undefined // yes, HID_AsyncHID exposes this, we're using that
 	)
 }
