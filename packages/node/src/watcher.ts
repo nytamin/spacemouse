@@ -1,52 +1,48 @@
 import type { usb } from 'usb'
 import { EventEmitter } from 'events'
 import { SpaceMouse } from '@spacemouse-lib/core'
-import { isASpaceMouseDevice, listAllConnectedDevices, setupSpaceMouse } from './methods'
+import { isASpaceMouseDevice, listAllConnectedDevices, setupSpaceMouse } from './methods.js'
 
 let USBImport: typeof usb | undefined
 let hasTriedImport = false
 
 // Because usb is an optional dependency, we have to use in a somewhat messy way:
-function USBDetect(): typeof usb {
+async function USBDetect(): Promise<typeof usb> {
 	if (USBImport) return USBImport
 
 	if (!hasTriedImport) {
 		hasTriedImport = true
 		try {
-			// eslint-disable-next-line @typescript-eslint/no-var-requires
-			const usb: typeof import('usb') = require('usb')
+			// const usb: typeof import('usb') = import('usb')
+			const usb = await import('usb')
 			USBImport = usb.usb
 			return USBImport
-		} catch (err) {
+		} catch {
 			// It's not installed
 		}
 	}
 	// else emit error:
-	throw `SpaceMouseWatcher requires the dependency "usb" to be installed when not polling.
+	throw new Error(`SpaceMouseWatcher requires the dependency "usb" to be installed when not polling.
 It might have been skipped due to your platform being unsupported (this is an issue with "usb", not the SpaceMouse library).
 Possible solutions are:
 * You can try to install the dependency manually, by running "npm install usb".
 * Use the fallback "usePolling" functionality instead: new SpaceMouseWatcher({ usePolling: true})
 * Otherwise you can still connect to SpaceMouse devices manually by using SpaceMouse.setupDevices().
-`
+`)
 }
 
 export interface SpaceMouseWatcherEvents {
 	// Note: This interface defines strong typings for any events that are emitted by the SpaceMouseWatcher class.
 
-	connected: (spaceMouse: SpaceMouse) => void
-	error: (err: any) => void
+	connected: [spaceMouse: SpaceMouse]
+	error: [err: any]
 }
 
-export declare interface SpaceMouseWatcher {
-	on<U extends keyof SpaceMouseWatcherEvents>(event: U, listener: SpaceMouseWatcherEvents[U]): this
-	emit<U extends keyof SpaceMouseWatcherEvents>(event: U, ...args: Parameters<SpaceMouseWatcherEvents[U]>): boolean
-}
 /**
  * Set up a watcher for newly connected SpaceMouse devices.
  * Note: It is highly recommended to set up a listener for the disconnected event on the SpaceMouse device, to clean up after a disconnected device.
  */
-export class SpaceMouseWatcher extends EventEmitter {
+export class SpaceMouseWatcher extends EventEmitter<SpaceMouseWatcherEvents> {
 	private seenDevicePaths: {
 		[devicePath: string]: {
 			spaceMouse?: SpaceMouse
@@ -68,8 +64,13 @@ export class SpaceMouseWatcher extends EventEmitter {
 
 		if (!this.options?.usePolling) {
 			// Watch for added devices:
-			USBDetect().on('attach', this.onAddedUSBDevice)
-			USBDetect().on('detach', this.onRemovedUSBDevice)
+
+			USBDetect()
+				.then((usb) => {
+					usb.on('attach', this.onAddedUSBDevice)
+					usb.on('detach', this.onRemovedUSBDevice)
+				})
+				.catch(console.error)
 		} else {
 			this.pollingInterval = setInterval(() => {
 				this.triggerUpdateConnectedDevices(true)
@@ -88,8 +89,12 @@ export class SpaceMouseWatcher extends EventEmitter {
 
 		if (!this.options?.usePolling) {
 			// Remove the listeners:
-			USBDetect().off('attach', this.onAddedUSBDevice)
-			USBDetect().off('detach', this.onRemovedUSBDevice)
+			USBDetect()
+				.then((usb) => {
+					usb.off('attach', this.onAddedUSBDevice)
+					usb.off('detach', this.onRemovedUSBDevice)
+				})
+				.catch(console.error)
 		}
 
 		if (this.pollingInterval) {

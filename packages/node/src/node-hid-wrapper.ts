@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { HIDDevice } from '@spacemouse-lib/core'
+import { HIDDevice, HIDDeviceEvents } from '@spacemouse-lib/core'
 import { EventEmitter } from 'events'
 import * as HID from 'node-hid'
 
@@ -7,7 +7,7 @@ import * as HID from 'node-hid'
  * This class wraps the node-hid.HID Device.
  * This translates it into the common format (@see HIDDevice) defined by @spacemouse-lib/core
  */
-export class NodeHIDDevice extends EventEmitter implements HIDDevice {
+export class NodeHIDDevice extends EventEmitter<HIDDeviceEvents> implements HIDDevice {
 	constructor(private device: HID.HIDAsync) {
 		super()
 		this._handleData = this._handleData.bind(this)

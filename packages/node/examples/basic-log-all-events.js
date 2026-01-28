@@ -40,7 +40,6 @@ watcher.on('connected', (spaceMouse) => {
 	spaceMouse.on('up', (keyIndex) => {
 		console.log('Button released', keyIndex)
 	})
-
 })
 
 // To stop watching, call

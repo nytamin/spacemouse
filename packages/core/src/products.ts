@@ -1,4 +1,4 @@
-import { literal } from './lib'
+import { literal } from './lib.js'
 
 /*
  * This file contains information about the various SpaceMouse devices

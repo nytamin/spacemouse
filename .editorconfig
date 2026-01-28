@@ -1,5 +1,15 @@
-[*]
-indent_style = tab
+root = true
 
-[*.{cs,js,ts,json}]
-indent_size = 4
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = tab
+insert_final_newline = true
+
+[{*/package.json,*.yaml,*.yml}]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = true

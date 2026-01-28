@@ -1,9 +1,9 @@
 import { SpaceMouse, PRODUCTS, Product } from '@spacemouse-lib/core'
-import { WebHIDDevice } from './web-hid-wrapper'
+import { WebHIDDevice } from './web-hid-wrapper.js'
 
 /** Prompts the user for which SpaceMouse device to select */
 export async function requestSpaceMice(): Promise<HIDDevice[]> {
-	return navigator.hid.requestDevice({
+	return window.navigator.hid.requestDevice({
 		filters: Object.values<Product>(PRODUCTS).map((product) => ({
 			vendorId: product.vendorId,
 			productId: product.productId,
@@ -15,7 +15,7 @@ export async function requestSpaceMice(): Promise<HIDDevice[]> {
  * The browser remembers what the user previously allowed your site to access, and this will open those without the request dialog
  */
 export async function getOpenedSpaceMice(): Promise<HIDDevice[]> {
-	return await navigator.hid.getDevices()
+	return await window.navigator.hid.getDevices()
 }
 
 /** Sets up a connection to a HID device (the SpaceMouse device) */

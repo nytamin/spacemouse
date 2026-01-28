@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { HIDDevice as CoreHIDDevice } from '@spacemouse-lib/core'
+import { HIDDevice as CoreHIDDevice, HIDDeviceEvents } from '@spacemouse-lib/core'
 import { EventEmitter } from 'events'
 import { Buffer as WebBuffer } from 'buffer'
 
@@ -7,7 +7,7 @@ import { Buffer as WebBuffer } from 'buffer'
  * The wrapped browser HIDDevice.
  * This translates it into the common format (@see CoreHIDDevice) defined by @spacemouse-lib/core
  */
-export class WebHIDDevice extends EventEmitter implements CoreHIDDevice {
+export class WebHIDDevice extends EventEmitter<HIDDeviceEvents> implements CoreHIDDevice {
 	private readonly device: HIDDevice
 
 	constructor(device: HIDDevice) {
@@ -21,7 +21,7 @@ export class WebHIDDevice extends EventEmitter implements CoreHIDDevice {
 
 		this.device.addEventListener('inputreport', this._handleInputReport)
 		this.device.addEventListener('error', this._handleError)
-		navigator.hid.addEventListener('disconnect', this._handleDisconnect)
+		window.navigator.hid.addEventListener('disconnect', this._handleDisconnect)
 	}
 	public async close(): Promise<void> {
 		await this.device.close()
@@ -40,7 +40,7 @@ export class WebHIDDevice extends EventEmitter implements CoreHIDDevice {
 	private _cleanup(): void {
 		this.device.removeEventListener('inputreport', this._handleInputReport)
 		this.device.removeEventListener('error', this._handleError)
-		navigator.hid.removeEventListener('disconnect', this._handleDisconnect)
+		window.navigator.hid.removeEventListener('disconnect', this._handleDisconnect)
 	}
 
 	private _handleInputReport(event: HIDInputReportEvent) {

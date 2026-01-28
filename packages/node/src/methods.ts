@@ -1,11 +1,11 @@
 import { SpaceMouse, PRODUCTS, VENDOR_IDS, Product } from '@spacemouse-lib/core'
 import * as HID from 'node-hid'
 import type { usb } from 'usb'
-import { NodeHIDDevice } from './node-hid-wrapper'
+import { NodeHIDDevice } from './node-hid-wrapper.js'
 
-import { isHID_Device, isHID_AsyncHID } from './lib'
+import { isHID_Device, isHID_AsyncHID } from './lib.js'
 
-import { HID_Device } from './api'
+import { HID_Device } from './api.js'
 
 /** Sets up a connection to a HID device (the SpaceMouse device) */
 export function setupSpaceMouse(): Promise<SpaceMouse>

@@ -18,16 +18,11 @@
     "email": "johan@nytamin.se",
     "url": "https://github.com/nytamin"
   },
-  "scripts": {
-    "build": "rimraf dist && yarn build:main",
-    "build:main": "tsc -p tsconfig.build.json",
-    "test": "jest"
-  },
   "files": [
     "dist/**"
   ],
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "prettier": "@sofie-automation/code-standard-preset/.prettierrc.json",
   "keywords": [
@@ -39,12 +34,16 @@
     "interface",
     "controller"
   ],
+  "devDependencies": {
+    "@types/jest": "^26.0.20",
+    "@types/w3c-web-usb": "^1.0.13"
+  },
   "dependencies": {
     "@spacemouse-lib/core": "0.0.3",
     "node-hid": "^3.2.0",
     "tslib": "^2.4.0"
   },
   "optionalDependencies": {
-    "usb": "^2.5.2"
+    "usb": "^2.17.0"
   }
 }

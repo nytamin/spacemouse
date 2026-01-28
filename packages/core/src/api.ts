@@ -18,14 +18,14 @@ export interface Rotation {
 export interface SpaceMouseEvents {
 	// Note: This interface defines strong typings for any events that are emitted by the SpaceMouse class.
 
-	disconnected: () => void
-	error: (err: any) => void
+	disconnected: []
+	error: [err: any]
 
-	translate: (translation: Translation) => void
-	rotate: (rotation: Rotation) => void
+	translate: [translation: Translation]
+	rotate: [rotation: Rotation]
 
-	down: (buttonIndex: number) => void
-	up: (buttonIndex: number) => void
+	down: [buttonIndex: number]
+	up: [buttonIndex: number]
 }
 export interface SpaceMouseInfo {
 	/** Name of the device */

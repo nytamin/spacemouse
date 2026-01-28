@@ -1,6 +1,6 @@
 export * from '@spacemouse-lib/core'
 
-export * from './api'
-export * from './node-hid-wrapper'
-export * from './watcher'
-export * from './methods'
+export * from './api.js'
+export * from './node-hid-wrapper.js'
+export * from './watcher.js'
+export * from './methods.js'

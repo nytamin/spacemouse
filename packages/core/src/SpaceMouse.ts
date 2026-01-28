@@ -1,15 +1,10 @@
-import { EventEmitter } from 'events'
-import { SpaceMouseEvents, Translation, Rotation, SpaceMouseInfo, ButtonStates } from './api'
-import { Product, PRODUCTS, VENDOR_IDS } from './products'
-import { getBit, literal } from './lib'
-import { HIDDevice } from './genericHIDDevice'
+import { EventEmitter } from 'node:events'
+import { SpaceMouseEvents, Translation, Rotation, SpaceMouseInfo, ButtonStates } from './api.js'
+import { Product, PRODUCTS, VENDOR_IDS } from './products.js'
+import { getBit, literal } from './lib.js'
+import { HIDDevice } from './genericHIDDevice.js'
 
-export declare interface SpaceMouse {
-	on<U extends keyof SpaceMouseEvents>(event: U, listener: SpaceMouseEvents[U]): this
-	emit<U extends keyof SpaceMouseEvents>(event: U, ...args: Parameters<SpaceMouseEvents[U]>): boolean
-}
-
-export class SpaceMouse extends EventEmitter {
+export class SpaceMouse extends EventEmitter<SpaceMouseEvents> {
 	private product: Product & { productId: number; interface: number }
 
 	/** All button states */
@@ -34,7 +29,11 @@ export class SpaceMouse extends EventEmitter {
 		return VENDOR_IDS
 	}
 
-	constructor(private _device: HIDDevice, private _deviceInfo: DeviceInfo, private _devicePath: string | undefined) {
+	constructor(
+		private _device: HIDDevice,
+		private _deviceInfo: DeviceInfo,
+		private _devicePath: string | undefined
+	) {
 		super()
 
 		this.product = this._setupDevice(_deviceInfo)

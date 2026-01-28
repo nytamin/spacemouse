@@ -14,8 +14,6 @@ export function isHID_Device(device: HID.Device | HID.HIDAsync | string): device
 type HID_AsyncHID = HID.HIDAsync & { devicePath: string }
 export function isHID_AsyncHID(device: HID.Device | HID.HIDAsync | string): device is HID_AsyncHID {
 	return (
-		typeof device === 'object' &&
-		device instanceof HID.HIDAsync &&
-		(device as HID_AsyncHID).devicePath !== undefined // yes, HID_AsyncHID exposes this, we're using that
+		typeof device === 'object' && device instanceof HID.HIDAsync && (device as HID_AsyncHID).devicePath !== undefined // yes, HID_AsyncHID exposes this, we're using that
 	)
 }

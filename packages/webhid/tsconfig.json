@@ -1,16 +1,11 @@
 {
-	"extends": "../../tsconfig.json",
+	"extends": "./tsconfig.build.json",
 	"include": [
-		"./src/**/*"
+		"src/**/*.ts",
+		"src/**/*.mts"
 	],
-	"compilerOptions": {
-		"lib": [
-			"es2015",
-			"dom"
-		],
-		"types": [
-			"jest",
-			"w3c-web-hid"
-		]
-	}
+	"exclude": [
+		"node_modules/**",
+		"scratch/**"
+	]
 }

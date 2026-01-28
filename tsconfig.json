@@ -1,7 +1,14 @@
 {
-	"extends": "./tsconfig.build.json",
-	"exclude": ["node_modules/**"],
-	"compilerOptions": {
-		"types": ["jest", "node"]
-	}
+	"files": [],
+	"references": [
+		{
+			"path": "./packages/core/tsconfig.json"
+		},
+		{
+			"path": "./packages/node/tsconfig.json"
+		},
+		{
+			"path": "./packages/webhid/tsconfig.json"
+		}
+	]
 }

@@ -1,6 +1,11 @@
 {
-	"extends": "../../tsconfig.json",
+	"extends": "./tsconfig.build.json",
 	"include": [
-		"./src/**/*"
+		"src/**/*.ts",
+		"examples/**/*.ts"
+	],
+	"exclude": [
+		"node_modules/**",
+		"scratch/**"
 	]
 }

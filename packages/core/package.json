@@ -18,21 +18,17 @@
     "email": "johan@nytamin.se",
     "url": "https://github.com/nytamin"
   },
-  "scripts": {
-    "build": "rimraf dist && yarn build:main",
-    "build:main": "tsc -p tsconfig.build.json",
-    "test": "jest"
-  },
   "files": [
     "dist/**"
   ],
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "prettier": "@sofie-automation/code-standard-preset/.prettierrc.json",
   "keywords": [
     "spaceMouse",
     "SpaceMouse",
+    "SpaceNavigator",
     "hid",
     "usb",
     "hardware",
@@ -42,7 +38,5 @@
   "dependencies": {
     "tslib": "^2.4.0"
   },
-  "publishConfig": {
-    "access": "public"
-  }
+  "packageManager": "yarn@4.10.3"
 }
