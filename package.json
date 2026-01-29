@@ -27,6 +27,7 @@
   "devDependencies": {
     "@sofie-automation/code-standard-preset": "^3.2.0",
     "@types/node": "^22.15.29",
+    "@vitest/coverage-v8": "3.2.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.39.2",
     "prettier": "^3.5.3",
