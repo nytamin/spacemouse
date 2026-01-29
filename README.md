@@ -1,6 +1,6 @@
 # SpaceMouse and SpaceNavigator connection library
 
-[![Node CI](https://github.com/nytamin/spacemouse/actions/workflows/lint-and-test.yml/badge.svg)](https://github.com/nytamin/spacemouse/actions/workflows/lint-and-test.yml)
+[![Node CI](https://github.com/nytamin/spacemouse/actions/workflows/node.yml/badge.svg)](https://github.com/nytamin/spacemouse/actions/workflows/node.yml)
 [![npm](https://img.shields.io/npm/v/spacemouse-node?label=npm%20-%20Node.js)](https://www.npmjs.com/package/spacemouse-node)
 [![npm](https://img.shields.io/npm/v/spacemouse-webhid?label=npm%20-%20Browser)](https://www.npmjs.com/package/spacemouse-webhid)
 
