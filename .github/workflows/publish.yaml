@@ -151,10 +151,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Use Node.js 22.x
+      - name: Use Node.js 24.x
         uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
 
       - name: Download release artifact
         uses: actions/download-artifact@v7
@@ -167,7 +167,7 @@ jobs:
           yarn install
 
           # Publish from the extracted release (build output present)
-          yarn workspaces foreach --all -pt --exclude @spacemouse-lib/core npm publish --access=public --provenance --tag ${{ needs.prepare.outputs.tag }}
+          yarn workspaces foreach --all -pt --exclude @spacemouse-lib/core --exclude @spacemouse-lib/webhid-demo npm publish --access=public --provenance --tag ${{ needs.prepare.outputs.tag }}
 
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "**Published:** $NEW_VERSION" >> $GITHUB_STEP_SUMMARY
