@@ -6965,9 +6965,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"spaceMouse-monorepo@workspace:.":
+"spacemouse-monorepo@workspace:.":
   version: 0.0.0-use.local
-  resolution: "spaceMouse-monorepo@workspace:."
+  resolution: "spacemouse-monorepo@workspace:."
   dependencies:
     "@sofie-automation/code-standard-preset": "npm:^3.2.0"
     "@types/node": "npm:^22.15.29"
