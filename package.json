@@ -21,7 +21,7 @@
     "docs:test": "run docs:html",
     "docs:html": "typedoc --tsconfig tsconfig.build.json",
     "release": "sofie-version",
-    "publish:all": "yarn workspaces foreach --all --exclude spacemouse-monorepo --exclude @spacemouse-lib/core --exclude @spacemouse-lib/webhid-demo npm publish --access=public",
+    "publish:all": "yarn workspaces foreach --all --exclude spacemouse-monorepo --exclude @spacemouse-lib/webhid-demo npm publish --access=public",
     "test:all": "yarn && yarn build && yarn test"
   },
   "devDependencies": {
