@@ -32,6 +32,7 @@
     "eslint": "^9.39.2",
     "prettier": "^3.5.3",
     "rimraf": "^3.0.2",
+    "typedoc": "^0.28.5",
     "typescript": "~5.7.0",
     "vitest": "^3.2.0"
   },
