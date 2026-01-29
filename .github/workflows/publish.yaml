@@ -161,13 +161,15 @@ jobs:
         with:
           name: publish-dist
 
-      - name: Publish to NPM
+      - name: Prepare
         run: |
           corepack enable
           yarn install
-
+      - name: Publish to NPM
+        run: |
           # Publish from the extracted release (build output present)
-          yarn workspaces foreach --all -pt --exclude @spacemouse-lib/core --exclude @spacemouse-lib/webhid-demo npm publish --access=public --provenance --tag ${{ needs.prepare.outputs.tag }}
+          echo "Publishing tag: ${{ needs.prepare.outputs.tag }}"
+          yarn workspaces foreach --all -pt --exclude spacemouse-monorepo --exclude @spacemouse-lib/core --exclude @spacemouse-lib/webhid-demo npm publish --access=public --provenance --tag ${{ needs.prepare.outputs.tag }}
 
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "**Published:** $NEW_VERSION" >> $GITHUB_STEP_SUMMARY
