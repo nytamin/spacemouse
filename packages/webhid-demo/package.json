@@ -1,6 +1,6 @@
 {
   "name": "@spacemouse-lib/webhid-demo",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "private": true,
   "license": "MIT",
   "homepage": "https://github.com/nytamin/spacemouse#readme",
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "buffer": "^6.0.3",
-    "spacemouse-webhid": "0.0.3"
+    "spacemouse-webhid": "1.0.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^7.0.0",

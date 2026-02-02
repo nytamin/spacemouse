@@ -1,6 +1,6 @@
 {
   "name": "@spacemouse-lib/core",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "NPM package to interact with the SpaceMouse devices",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

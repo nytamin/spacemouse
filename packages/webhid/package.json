@@ -1,6 +1,6 @@
 {
   "name": "spacemouse-webhid",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "An npm module for interfacing with the SpaceMouse devices in a browser",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -41,7 +41,7 @@
     "@types/w3c-web-usb": "^1.0.13"
   },
   "dependencies": {
-    "@spacemouse-lib/core": "0.0.3",
+    "@spacemouse-lib/core": "1.0.0",
     "buffer": "^6.0.3"
   },
   "engines": {

@@ -1,6 +1,6 @@
 {
   "name": "spacemouse-node",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "An npm module for interfacing with the 3DConnexion SpaceMouse devices in Node.js",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -39,7 +39,7 @@
     "@types/w3c-web-usb": "^1.0.13"
   },
   "dependencies": {
-    "@spacemouse-lib/core": "0.0.3",
+    "@spacemouse-lib/core": "1.0.0",
     "node-hid": "^3.2.0",
     "tslib": "^2.4.0"
   },

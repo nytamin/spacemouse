@@ -849,7 +849,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@spacemouse-lib/core@npm:0.0.3, @spacemouse-lib/core@workspace:packages/core":
+"@spacemouse-lib/core@npm:1.0.0, @spacemouse-lib/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@spacemouse-lib/core@workspace:packages/core"
   dependencies:
@@ -863,7 +863,7 @@ __metadata:
   dependencies:
     buffer: "npm:^6.0.3"
     copy-webpack-plugin: "npm:^7.0.0"
-    spacemouse-webhid: "npm:0.0.3"
+    spacemouse-webhid: "npm:1.0.0"
     ts-loader: "npm:^8.3.0"
     typescript: "npm:~5.7.0"
     webpack: "npm:^5.74.0"
@@ -6986,7 +6986,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "spacemouse-node@workspace:packages/node"
   dependencies:
-    "@spacemouse-lib/core": "npm:0.0.3"
+    "@spacemouse-lib/core": "npm:1.0.0"
     "@types/jest": "npm:^26.0.20"
     "@types/w3c-web-usb": "npm:^1.0.13"
     node-hid: "npm:^3.2.0"
@@ -6998,11 +6998,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"spacemouse-webhid@npm:0.0.3, spacemouse-webhid@workspace:packages/webhid":
+"spacemouse-webhid@npm:1.0.0, spacemouse-webhid@workspace:packages/webhid":
   version: 0.0.0-use.local
   resolution: "spacemouse-webhid@workspace:packages/webhid"
   dependencies:
-    "@spacemouse-lib/core": "npm:0.0.3"
+    "@spacemouse-lib/core": "npm:1.0.0"
     "@types/w3c-web-hid": "npm:^1.0.6"
     "@types/w3c-web-usb": "npm:^1.0.13"
     buffer: "npm:^6.0.3"
