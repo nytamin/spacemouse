@@ -1,10 +1,17 @@
 {
   "name": "spacemouse-monorepo",
   "version": "0.0.0",
-  "repository": "https://github.com/SuperFlyTV/spaceMouse",
   "author": "Johan Nyman <johan@nytamin.se>",
   "license": "MIT",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nytamin/spaceMouse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nytamin/spaceMouse/issues"
+  },
+  "homepage": "https://github.com/nytamin/spaceMouse",
   "workspaces": [
     "packages/*"
   ],
